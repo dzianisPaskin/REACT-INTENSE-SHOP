@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { user } from './data';
+import { user } from '../moc/data';
 import { useNavigate } from 'react-router-dom';
 
-export const Modal = ({ showModal, onClick, onValidation }) => {
+export const Modal = ({ onClick, onValidation }) => {
   const [userData, setUserData] = useState({
     name: '',
     password: '',
@@ -44,14 +44,14 @@ export const Modal = ({ showModal, onClick, onValidation }) => {
 
     if (Object.keys(validationErrors).length === 0) {
       navigate('');
-      onValidation(true, true);   
+      onValidation(true, true);
     }
 
     e.preventDefault();
   }
   return (
     <div className="modal-overlay">
-      <div className={`${showModal && 'modal show-modal'}`}>
+      <div className="modal">
         <h2>Login</h2>
 
         <button onClick={onClick} className="close-button" />

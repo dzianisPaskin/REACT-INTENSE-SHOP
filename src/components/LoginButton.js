@@ -1,7 +1,7 @@
-export const LoginButton = ({ openModal, buttonText }) => {
+export const LoginButton = ({ openModal, isLogin }) => {
   return (
     <button className="login" onClick={openModal}>
-      {buttonText}
+      {isLogin ? 'Logout' : 'Login'}
     </button>
   );
 };

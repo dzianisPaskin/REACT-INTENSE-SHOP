@@ -222,15 +222,11 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  opacity: 0;
+
   transition: opacity 0.5s;
 
   border-radius: 5px;
   z-index: 20;
-}
-
-.show-modal {
-  opacity: 1;
 }
 
 .close-button {
@@ -310,7 +306,7 @@ label {
   bottom: 4rem;
 }
 
-.product-description > .product-list  {
+.product-description > .product-list {
   position: relative;
   display: grid;
   grid-template-rows: 0fr 1fr 0fr 0fr 0fr;

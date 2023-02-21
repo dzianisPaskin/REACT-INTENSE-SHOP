@@ -1,8 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
-import { Home, About, DescriptionProduct, NotFound, DataRequest } from './pages/index';
+import {
+  Home,
+  About,
+  DescriptionProduct,
+  NotFound,
+  DataRequest,
+} from './pages/index';
 import { Layout } from './components/Layout';
-import { data } from './components/data';
+import { data } from './moc/data';
 import { Modal } from './components/Modal';
 
 import './App.css';
@@ -13,10 +19,9 @@ export const App = () => {
     totalPrice: 0,
   });
   const [showModal, setShowModal] = useState({
-    modal: false,
-    login: false,
-    Logout: false,
-    loginText: 'login',
+    isModal: false,
+    isLogin: false,
+    isLogout: false,
   });
 
   const { productsInfo } = data;
@@ -43,42 +48,37 @@ export const App = () => {
   };
 
   const handleLoginButton = () => {
-    showModal.modal
-      ? setShowModal({ ...showModal, modal: false })
-      : setShowModal({ ...showModal, modal: true });
-    if (showModal.login) {
+    showModal.isModal
+      ? setShowModal({ ...showModal, isModal: false })
+      : setShowModal({ ...showModal, isModal: true });
+    if (showModal.isLogin) {
       setShowModal({
         ...showModal,
-        modal: false,
-        loginText: 'login',
-        login: false,
-        Logout: true,
+        isModal: false,
+
+        isLogin: false,
+        isLogout: true,
       });
 
       setCartItems({ ...cartItems, countItem: 0, totalPrice: 0 });
     }
   };
 
-  const handleFormlogin = (isValid, islogin) => {
+  const handleFormlogin = (isValid, isLogin) => {
     isValid
       ? setShowModal({
           ...showModal,
-          modal: false,
-          login: islogin,
-          Logout: false,
-          loginText: 'logout',
+          isModal: false,
+          isLogin: isLogin,
+          isLogout: false,
         })
-      : setShowModal({ ...showModal, modal: false, login: false });
+      : setShowModal({ ...showModal, isModal: false, isLogin: false });
   };
 
   return (
     <>
-      {showModal.modal && (
-        <Modal
-          showModal={showModal.modal}
-          onClick={handleLoginButton}
-          onValidation={handleFormlogin}
-        />
+      {showModal.isModal && (
+        <Modal onClick={handleLoginButton} onValidation={handleFormlogin} />
       )}
 
       <Routes>
@@ -88,10 +88,9 @@ export const App = () => {
             <Layout
               countCartItems={cartItems}
               openModal={handleLoginButton}
-              showModal={showModal.modal}
-              loginText={showModal.login}
-              buttonText={showModal.loginText}
-              Logout={showModal.Logout}
+              showModal={showModal.isModal}
+              isLogout={showModal.isLogout}
+              isLogin={showModal.isLogin}
             />
           }
         >
@@ -101,18 +100,11 @@ export const App = () => {
               <Home
                 products={productsInfo}
                 onAdd={onAdd}
-                isLogout={showModal.Logout}
+                isLogout={showModal.isLogout}
               />
             }
           />
-          <Route
-            path='/data'
-            element={
-              <DataRequest
-            
-              />
-            }
-          />
+          <Route path="/data" element={<DataRequest />} />
           <Route path="about" element={<About />} />
           <Route
             path="/description/:id"
@@ -121,7 +113,7 @@ export const App = () => {
                 itemsDescription={cartItems}
                 onAdd={onAdd}
                 products={productsInfo}
-                isLogout={showModal.Logout}
+                isLogout={showModal.isLogout}
               />
             }
           />

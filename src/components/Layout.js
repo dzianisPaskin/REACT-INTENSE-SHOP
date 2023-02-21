@@ -2,7 +2,7 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { CartCount } from './CartCount';
 import { LoginButton } from './LoginButton';
 
-export const Layout = ({ countCartItems, openModal, showModal, buttonText, Logout }) => {
+export const Layout = ({ countCartItems, openModal, showModal, buttonText, isLogin }) => {
   
   const activeStyles = {
     color: 'white',
@@ -20,12 +20,14 @@ export const Layout = ({ countCartItems, openModal, showModal, buttonText, Logou
             About
           </NavLink>
         </div>
-       {!Logout && <CartCount countItems={countCartItems} Logout={Logout} /> } 
+        {!isLogin && (
+          <CartCount countItems={countCartItems} isLogin={isLogin} />
+        )}
 
         <LoginButton
           showModal={showModal}
           openModal={openModal}
-          buttonText={buttonText}
+          isLogin={isLogin}
         />
       </header>
 
