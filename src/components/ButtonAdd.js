@@ -1,3 +1,7 @@
+import { useContext } from 'react';
+
+import { LoginContext } from '../hoc/LoginProvider';
+
 export const ButtonAdd = ({
   className,
   text,
@@ -6,10 +10,19 @@ export const ButtonAdd = ({
   count,
   ...props
 }) => {
- 
-  return(  
-  <button onClick={() => onAdd(product, count)} className={className}>
-    {text}
-  </button>)
+  const { textShouldBeLoggedIn } = useContext(LoginContext);
 
+  return (
+    <>
+      {textShouldBeLoggedIn && (
+        <span className="add-cart-text">
+          To add an item to your cart, please login.
+        </span>
+      )}
+
+      <button onClick={() => onAdd(product, count)} className={className}>
+        {text}
+      </button>
+    </>
+  );
 };

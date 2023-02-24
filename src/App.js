@@ -5,122 +5,79 @@ import {
   About,
   DescriptionProduct,
   NotFound,
-  DataRequest,
+  LoginProvider,
+  CartProvider,
+  CustomRoute,
+  DataRequest
 } from './pages/index';
 import { Layout } from './components/Layout';
 import { data } from './moc/data';
 import { Modal } from './components/Modal';
-
 import './App.css';
 
 export const App = () => {
-  const [cartItems, setCartItems] = useState({
-    countItem: 0,
-    totalPrice: 0,
-  });
-  const [showModal, setShowModal] = useState({
-    isModal: false,
-    isLogin: false,
-    isLogout: false,
-  });
-
   const { productsInfo } = data;
-
-  const onAdd = (product, count) => {
-    const newTotalPrice = cartItems.totalPrice + product.price;
-    const fixedPrice = newTotalPrice.toFixed(2);
-    product &&
-      setCartItems({
-        ...cartItems,
-        countItem: cartItems.countItem + 1,
-        totalPrice: parseFloat(fixedPrice),
-      });
-
-    if (count) {
-      const newTotalPrice = product.price * count + cartItems.totalPrice;
-      const fixedPrice = newTotalPrice.toFixed(2);
-      setCartItems({
-        ...cartItems,
-        countItem: cartItems.countItem + count,
-        totalPrice: parseFloat(fixedPrice),
-      });
-    }
+  const [isShowModal, setIsShowModal] = useState(false);
+  const showModal = () => {
+    isShowModal ? setIsShowModal(false) : setIsShowModal(true);
   };
-
-  const handleLoginButton = () => {
-    showModal.isModal
-      ? setShowModal({ ...showModal, isModal: false })
-      : setShowModal({ ...showModal, isModal: true });
-    if (showModal.isLogin) {
-      setShowModal({
-        ...showModal,
-        isModal: false,
-
-        isLogin: false,
-        isLogout: true,
-      });
-
-      setCartItems({ ...cartItems, countItem: 0, totalPrice: 0 });
-    }
-  };
-
   const handleFormlogin = (isValid, isLogin) => {
     isValid
-      ? setShowModal({
+      ? setIsShowModal({
           ...showModal,
           isModal: false,
           isLogin: isLogin,
           isLogout: false,
         })
-      : setShowModal({ ...showModal, isModal: false, isLogin: false });
+      : setIsShowModal({ ...showModal, isModal: false, isLogin: false });
+  };
+
+  const isValidProductId = (params) => {
+    const productId = parseInt(params.id);
+    if (isNaN(productId) || params.id !== productId.toString()) {
+      return false; // the ID is not a valid number
+    }
+    if (params['*']) {
+      return false; // there are extra characters after the ID
+    }
+    return true;
   };
 
   return (
     <>
-      {showModal.isModal && (
-        <Modal onClick={handleLoginButton} onValidation={handleFormlogin} />
-      )}
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout
-              countCartItems={cartItems}
-              openModal={handleLoginButton}
-              showModal={showModal.isModal}
-              isLogout={showModal.isLogout}
-              isLogin={showModal.isLogin}
-            />
-          }
-        >
-          <Route
-            index
-            element={
-              <Home
-                products={productsInfo}
-                onAdd={onAdd}
-                isLogout={showModal.isLogout}
+      <LoginProvider>
+        <CartProvider>
+          {isShowModal && (
+            <Modal showModal={showModal} onValidation={handleFormlogin} />
+          )}
+          <Routes>
+            <Route path="/" element={<Layout showModal={showModal} />}>
+              <Route index element={<Home products={productsInfo} />} />
+              <Route path="about" element={<About />} />
+              <Route
+                path="description/:id"
+                element={<DescriptionProduct products={productsInfo} />}
               />
-            }
-          />
-          <Route path="/data" element={<DataRequest />} />
-          <Route path="about" element={<About />} />
-          <Route
-            path="/description/:id"
-            element={
-              <DescriptionProduct
-                itemsDescription={cartItems}
-                onAdd={onAdd}
-                products={productsInfo}
-                isLogout={showModal.isLogout}
-              />
-            }
-          />
 
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+              <Route
+                path="description/:id*"
+                element={
+                  <CustomRoute
+                    isValid={isValidProductId}
+                    validElement={
+                      <DescriptionProduct products={productsInfo} />
+                    }
+                    invalidElement={<NotFound />}
+                  />
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+              <Route path="data" element={<DataRequest />} />
+
+            </Route>
+          </Routes>
+        </CartProvider>
+      </LoginProvider>
     </>
   );
 };

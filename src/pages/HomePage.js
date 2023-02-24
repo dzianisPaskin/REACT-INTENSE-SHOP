@@ -1,7 +1,9 @@
-import { React } from 'react';
+import { React, useContext } from 'react';
 import { Product } from '../components/ProductCard';
+import { CartContext } from '../hoc/CartProvider';
 
-export const Home = ({ products, onAdd, isLogout }) => {
+export const Home = ({ products }) => {
+  const { onAdd } = useContext(CartContext);
 
   return (
     <div className="homeWrap">
@@ -18,7 +20,6 @@ export const Home = ({ products, onAdd, isLogout }) => {
             productName={product.productName}
             src={`${product.src}`}
             price={product.price}
-            Logout={isLogout}
           />
         ))}
       </div>

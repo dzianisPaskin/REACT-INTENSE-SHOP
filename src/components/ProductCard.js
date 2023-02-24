@@ -14,7 +14,6 @@ export const Product = ({
   count,
   increment,
   decrement,
-  Logout,
   ...props
 }) => {
   return (
@@ -34,7 +33,7 @@ export const Product = ({
 
         {description ? description : null}
         <span className="price">${price}</span>
-        {Logout && <span className='add-cart-text'>To add an item to your cart, please login.</span>}
+
         <ButtonAdd
           count={count}
           price={price}

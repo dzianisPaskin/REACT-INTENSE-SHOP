@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Product } from '../components/ProductCard';
+import { CartContext } from '../hoc/CartProvider';
 
-export const DescriptionProduct = ({ products, onAdd, isLogout }) => {
+export const DescriptionProduct = ({ products, isLogout }) => {
+  const {onAdd} = useContext(CartContext)
   const [count, setCount] = useState(1);
 
   const decrement = () => {

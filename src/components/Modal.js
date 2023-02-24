@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { user } from '../moc/data';
 import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../hoc/LoginProvider';
 
-export const Modal = ({ onClick, onValidation }) => {
+export const Modal = ({ showModal }) => {
+  const { changeLoggedInStatus, setTextShouldBeLoggedIn } =
+    useContext(LoginContext);
   const [userData, setUserData] = useState({
     name: '',
     password: '',
@@ -33,7 +36,8 @@ export const Modal = ({ onClick, onValidation }) => {
   const buttonReset = () => {
     setUserData('');
     setErrors('');
-    onValidation(false);
+    changeLoggedInStatus(false);
+    showModal();
   };
 
   function handleSubmit(e) {
@@ -44,7 +48,9 @@ export const Modal = ({ onClick, onValidation }) => {
 
     if (Object.keys(validationErrors).length === 0) {
       navigate('');
-      onValidation(true, true);
+      setTextShouldBeLoggedIn(false);
+      changeLoggedInStatus(true);
+      showModal();
     }
 
     e.preventDefault();
@@ -53,9 +59,7 @@ export const Modal = ({ onClick, onValidation }) => {
     <div className="modal-overlay">
       <div className="modal">
         <h2>Login</h2>
-
-        <button onClick={onClick} className="close-button" />
-
+        <button onClick={showModal} className="close-button" />
         <form onSubmit={handleSubmit}>
           <label>
             name

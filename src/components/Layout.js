@@ -1,9 +1,12 @@
 import { Outlet, NavLink } from 'react-router-dom';
+import { useContext } from 'react';
 import { CartCount } from './CartCount';
 import { LoginButton } from './LoginButton';
+import { CartContext } from '../hoc/CartProvider';
 
-export const Layout = ({ countCartItems, openModal, showModal, buttonText, isLogin }) => {
-  
+export const Layout = ({ showModal }) => {
+  const { cartItems } = useContext(CartContext);
+
   const activeStyles = {
     color: 'white',
   };
@@ -20,15 +23,9 @@ export const Layout = ({ countCartItems, openModal, showModal, buttonText, isLog
             About
           </NavLink>
         </div>
-        {!isLogin && (
-          <CartCount countItems={countCartItems} isLogin={isLogin} />
-        )}
+        <CartCount countItems={cartItems} />
 
-        <LoginButton
-          showModal={showModal}
-          openModal={openModal}
-          isLogin={isLogin}
-        />
+        <LoginButton showModal={showModal} />
       </header>
 
       <div>
